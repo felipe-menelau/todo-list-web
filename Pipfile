@@ -12,6 +12,7 @@ django = "*"
 djangorestframework = "*"
 django-filter = "*"
 python-dotenv = "*"
+djangorestframework-simplejwt = "*"
 
 
 [requires]
