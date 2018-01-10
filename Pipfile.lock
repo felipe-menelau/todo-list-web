@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "712ee549b5a311769234ae769fca46ac3ba22ce417e9c0bbba5f5f60158491fb"
+            "sha256": "62ebcd0a40033118cf84fe8078df09fcc8b8f3d967f3a828f4d423d160724a25"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -29,6 +29,13 @@
         ]
     },
     "default": {
+        "click": {
+            "hashes": [
+                "sha256:29f99fc6125fbc931b758dc053b3114e55c77a6e4c6c3a2674a2dc986016381d",
+                "sha256:f15516df478d5a56180fbf80e68f206010e6d160fc39fa508b65e035fd75130b"
+            ],
+            "version": "==6.7"
+        },
         "django": {
             "hashes": [
                 "sha256:52475f607c92035d4ac8fee284f56213065a4a6b25ed43f7e39df0e576e69e9f",
@@ -49,6 +56,13 @@
                 "sha256:9f9e94e8d22b100ed3a43cee8c47a7ff7b185e778a1f2da9ec5c73fc4e081b87"
             ],
             "version": "==3.7.7"
+        },
+        "djangorestframework-simplejwt": {
+            "hashes": [
+                "sha256:7a0a57a71580f67214c09ecc600f35dd2bd61d8c3b9d1d0f7edc2455c293b0f0",
+                "sha256:7414da6ea7275b5ba97418fa5c0b130ad414a400bf0e8c794c67288afe0d6e86"
+            ],
+            "version": "==3.2"
         },
         "psycopg2": {
             "hashes": [
@@ -85,6 +99,20 @@
                 "sha256:5c3213be557d0468f9df8fe2487eaf2990d9799202c5ff5cb8d394d09fad9b2a"
             ],
             "version": "==2.7.3.2"
+        },
+        "pyjwt": {
+            "hashes": [
+                "sha256:a4e5f1441e3ca7b382fd0c0b416777ced1f97c64ef0c33bfa39daf38505cfd2f",
+                "sha256:500be75b17a63f70072416843dc80c8821109030be824f4d14758f114978bae7"
+            ],
+            "version": "==1.5.3"
+        },
+        "python-dotenv": {
+            "hashes": [
+                "sha256:dc7940052cfe170e881aea40feb4ea7776e6a97170ed038fd2ee7e26e47585f2",
+                "sha256:45e927c34204c90f5faa35ea8709b894f6b1a7712d77eb50940601068040993b"
+            ],
+            "version": "==0.7.1"
         },
         "pytz": {
             "hashes": [
