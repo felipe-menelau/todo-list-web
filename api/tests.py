@@ -19,7 +19,8 @@ class UserTest(APITestCase):
         response = self.client.post(self.create_url, data, format='json')
 
         self.assertEqual(User.objects.count(), 2)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
         self.assertEqual(response.data['username'], data['username'])
         self.assertEqual(response.data['email'], data['email'])
         self.assertFalse('password' in response.data)
+        self.assertFalse(User.objects.get(username=data['username']).is_active, False)
