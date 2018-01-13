@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from rest_framework import status
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
+from api.tokens import account_activation_token
 
 class UserTest(APITestCase):
     def setUp(self):
@@ -30,8 +31,6 @@ class UserTest(APITestCase):
         self.assertFalse(User.objects.get(username=data['username']).is_active, False)
 
     def test_activate_user(self):
-        from api.tokens import account_activation_token
-
         just_registered_user = User.objects.create_user('carlos', 'carlos@example.com', 'carlospassword')
         just_registered_user.is_active = False
         just_registered_user.save()
@@ -61,3 +60,24 @@ class UserTest(APITestCase):
         response = self.client.post(self.forgot_url, data, format='json')
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_password_reset(self):
+        new_password =  'password123'
+        reseting_user = User.objects.create_user('mateus', 'mateus@exemple.com', 'abouttobereset')
+
+        reseting_user_uid = urlsafe_base64_encode(force_bytes(reseting_user.pk))
+        reseting_user_token = account_activation_token.make_token(reseting_user)
+
+        data = {
+            'uid': reseting_user_uid,
+            'token': reseting_user_token,
+            'new_password': new_password,
+        }
+
+        response = self.client.patch(self.forgot_url, data, format='json')
+
+        reseting_user.refresh_from_db()
+
+        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
+        self.assertEqual(reseting_user.check_password(new_password), True)
+
