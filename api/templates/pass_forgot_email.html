@@ -1,0 +1,7 @@
+{% autoescape off %}
+Hi {{ user.username }},
+Here is your password reset token
+{{ uid }}/{{ token }}
+Copy and paste it on the password reset screen
+{% endautoescape %}
+
