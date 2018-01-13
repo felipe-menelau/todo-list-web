@@ -11,6 +11,7 @@ class UserTest(APITestCase):
 
         self.create_url = reverse('user-create')
         self.activate_url = reverse('user-activate')
+        self.forgot_url = reverse('user-forgot')
 
     def test_create_user(self):
         data = {
