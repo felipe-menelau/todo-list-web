@@ -59,3 +59,18 @@ class UserPasswordManagement(APIView):
             return Response('', status.HTTP_204_NO_CONTENT)
         else:
             return Response('', status.HTTP_204_NO_CONTENT)
+
+    def patch(self, request, format='json'):
+        uid = force_text(urlsafe_base64_decode(request.data['uid']))
+        token = request.data['token']
+        try:
+            user = User.objects.get(pk=uid)
+        except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+        if user is not None and account_activation_token.check_token(user, token):
+            user.set_password(request.data['new_password'])
+            user.save()
+            return Response('success', status.HTTP_202_ACCEPTED)
+        else:
+            return Response('', status.HTTP_400_BAD_REQUEST)
+
