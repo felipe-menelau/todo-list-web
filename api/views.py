@@ -3,6 +3,8 @@ from rest_framework import viewsets, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from api.serializers import UserSerializer
+from api.mail_sender import send_confirmation_email
+
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all().order_by('-date_joined')
@@ -18,5 +20,9 @@ class UserCreate(APIView):
 
         if serializer.is_valid():
             user = serializer.save()
+            user.is_active = False
+            send_confirmation_email(user)
+            user.save()
             if user:
-                return Response(serializer.data, status.HTTP_201_CREATED)
+                return Response(serializer.data, status.HTTP_202_ACCEPTED)
+
