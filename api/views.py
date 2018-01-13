@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from api.serializers import UserSerializer
-from api.mail_sender import send_confirmation_email
+from api.mail_sender import send_confirmation_email, send_forgot_password_email
 from api.tokens import account_activation_token
 
 
@@ -46,3 +46,16 @@ class UserActivate(APIView):
             return Response('success', status.HTTP_200_OK)
         else:
             return Response('failed', status.HTTP_401_UNAUTHORIZED)
+
+class UserPasswordManagement(APIView):
+    def post(self, request, format='json'):
+        email = request.data['email']
+        try:
+            user = User.objects.get(email=email)
+        except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+        if user is not None:
+            send_forgot_password_email(user)
+            return Response('', status.HTTP_204_NO_CONTENT)
+        else:
+            return Response('', status.HTTP_204_NO_CONTENT)
