@@ -26,6 +26,14 @@ class TaskCreation(APIView):
         else:
             return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
+    def get(self, request, pk, format='json'):
+        try:
+            queryset = TODOList.objects.get(owner=request.user.id, id=pk).task_set.all()
+        except(TypeError, ValueError, OverflowError, Task.DoesNotExist):
+            return Response('', status.HTTP_400_BAD_REQUEST)
+        serializer = TaskSerializer(queryset, many=True)
+        return Response(serializer.data, status.HTTP_200_OK)
+
 class TaskManagement(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -40,8 +48,15 @@ class TaskManagement(APIView):
                 request.data['title'] = task.title
             if 'deadline' not in request.data:
                 request.data['deadline'] = task.deadline
+
             if 'assigned_to' not in request.data:
                 request.data['assigned_to'] = task.assigned_to
+            else:
+                try:
+                    request.data['assigned_to'] = User.objects.get(username=request.data['assigned_to']).id
+                except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+                    return Response('invalid username', status.HTTP_400_BAD_REQUEST)
+
             serializer = TaskSerializer(task, data=request.data)
             if serializer.is_valid():
                 serializer.save()
@@ -50,3 +65,11 @@ class TaskManagement(APIView):
                 return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
         else:
             return Response('', status.HTTP_403_FORBIDDEN)
+
+    def delete(self, request, pk, pk_task, format='json'):
+        try:
+            task = Task.objects.get(owner=pk, id=pk_task)
+        except(TypeError, ValueError, OverflowError, Task.DoesNotExist):
+            return Response('', status.HTTP_403_FORBIDDEN)
+        task.delete()
+        return Response('', status.HTTP_204_NO_CONTENT)

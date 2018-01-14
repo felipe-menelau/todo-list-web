@@ -32,6 +32,14 @@ class TaskTest(APITestCase):
         self.assertEqual(self.test_todo_list.task_set.get(title=data['title']).title, data['title'])
         self.assertEqual(self.test_todo_list.task_set.get(title=data['title']).deadline.replace(tzinfo=None), data['deadline'])
 
+    def test_list_all_tasks(self):
+        self.test_todo_list.task_set.create(title='Taskerino', deadline=datetime.strptime('16-01-2017', '%d-%m-%Y'), assigned_to=None)
+
+        response = self.client.get(f'/api/todo/{self.test_todo_list.id}/tasks/', format='json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+
     def test_edit_task_name(self):
         data = {
             'title': 'Do meanignful things',
@@ -40,8 +48,39 @@ class TaskTest(APITestCase):
         current_title = self.test_task.title
         current_deadline = self.test_task.deadline
 
-        response = self.client.patch(reverse('task-detail', kwargs={'pk': self.test_todo_list.id, 'pk_task': self.test_task.id}), data, format='json')
+        response = self.client.patch(
+                reverse('task-detail', kwargs={'pk': self.test_todo_list.id, 'pk_task': self.test_task.id}),
+                data,
+                format='json'
+            )
 
         self.test_task.refresh_from_db()
 
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
+
+    def test_set_task_as_done(self):
+        data = {
+            'done': True,
+        }
+
+        response = self.client.patch(
+                reverse('task-detail', kwargs={'pk': self.test_todo_list.id, 'pk_task': self.test_task.id}),
+                data,
+                format='json'
+            )
+
+        self.test_task.refresh_from_db()
+
+        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
+        self.assertEqual(self.test_task.done, True)
+
+    def test_delete_task(self):
+        response = self.client.delete(
+                reverse('task-detail', kwargs={'pk': self.test_todo_list.id, 'pk_task': self.test_task.id}),
+                format='json'
+            )
+
+        self.test_todo_list.refresh_from_db()
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(self.test_todo_list.task_set.count(), 0)
