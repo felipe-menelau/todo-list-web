@@ -6,31 +6,16 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
-from api.serializers import UserSerializer, TODOListSerializer
-from api.mail_sender import send_confirmation_email, send_forgot_password_email
-from api.tokens import account_activation_token
+from api.serializers import UserSerializer, TODOListSerializer, TaskSerializer
+from api.services.mail_sender import send_confirmation_email, send_forgot_password_email
+from api.services.tokens import account_activation_token
 from api.models import TODOList
-
-
 
 class UserViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminUser]
 
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
-
-class TODOListViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
-
-    serializer_class = TODOListSerializer
-
-    def get_queryset(self):
-        user = self.request.user
-        return TODOList.objects.filter(owner=self.request.user).order_by('created_at')
-
-    def create(self, request, *args, **kwargs):
-        request.data['owner'] = request.user.id
-        return super(self.__class__, self).create(request, *args, **kwargs)
 
 class UserCreate(APIView):
     def post(self, request, format='json'):
