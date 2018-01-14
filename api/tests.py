@@ -107,3 +107,17 @@ class TODOListTests(APITestCase):
         response = self.client.delete(f'/api/todo/{todo_to_delete.id}/', format='json')
 
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_edit_todo_list(self):
+        todo_to_edit = self.test_user.todolist_set.create(title='Teste')
+
+        data = {
+            'title': 'New name',
+        }
+
+        response = self.client.patch(f'/api/todo/{todo_to_edit.id}/', data, format='json')
+
+        todo_to_edit.refresh_from_db()
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(todo_to_edit.title, data['title'])
