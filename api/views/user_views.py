@@ -11,26 +11,11 @@ from api.mail_sender import send_confirmation_email, send_forgot_password_email
 from api.tokens import account_activation_token
 from api.models import TODOList
 
-
-
 class UserViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminUser]
 
     queryset = User.objects.all().order_by('-date_joined')
     serializer_class = UserSerializer
-
-class TODOListViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAuthenticated]
-
-    serializer_class = TODOListSerializer
-
-    def get_queryset(self):
-        user = self.request.user
-        return TODOList.objects.filter(owner=self.request.user).order_by('created_at')
-
-    def create(self, request, *args, **kwargs):
-        request.data['owner'] = request.user.id
-        return super(self.__class__, self).create(request, *args, **kwargs)
 
 class UserCreate(APIView):
     def post(self, request, format='json'):
@@ -92,24 +77,3 @@ class UserPasswordManagement(APIView):
         else:
             return Response('', status.HTTP_400_BAD_REQUEST)
 
-class TaskCreation(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request, pk, format='json'):
-        request.data['owner'] = pk
-        serializer_context = {
-                'request': request,
-                }
-
-        serializer = TaskSerializer(data=request.data, context=serializer_context)
-
-        if serializer.is_valid():
-            task = serializer.save()
-            task.save()
-            if task:
-                return Response(serializer.data, status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
-
-class TaskManagement(APIView):
-    permission_classes = [IsAuthenticated]

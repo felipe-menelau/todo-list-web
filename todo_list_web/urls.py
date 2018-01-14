@@ -16,7 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.conf.urls import url, include
-from api import views
+from api.views import task_views, todo_views, user_views
 from rest_framework import routers
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -24,8 +24,8 @@ from rest_framework_simplejwt.views import (
 )
 
 router = routers.DefaultRouter()
-router.register(r'users', views.UserViewSet)
-router.register(r'todo', views.TODOListViewSet, base_name='todolist')
+router.register(r'users', user_views.UserViewSet)
+router.register(r'todo', todo_views.TODOListViewSet, base_name='todolist')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
