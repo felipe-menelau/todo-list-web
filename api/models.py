@@ -14,3 +14,4 @@ class Task(models.Model):
     title = models.CharField(max_length=100)
     done = models.BooleanField(default=False)
     deadline = models.DateTimeField()
+    assigned_to = models.ForeignKey(User, on_delete=models.PROTECT, null=True)
