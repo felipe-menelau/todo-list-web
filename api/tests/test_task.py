@@ -57,3 +57,18 @@ class TaskTest(APITestCase):
         self.test_task.refresh_from_db()
 
         self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
+
+    def test_set_task_as_done(self):
+        data = {
+            'done': True,
+        }
+
+        response = self.client.patch(
+                reverse('task-detail', kwargs={'pk': self.test_todo_list.id, 'pk_task': self.test_task.id}),
+                data,
+                format='json'
+            )
+
+        self.test_task.refresh_from_db()
+
+        self.assertEqual(self.test_task.done, True)
