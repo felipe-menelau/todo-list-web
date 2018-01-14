@@ -4,8 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from api.serializers import UserSerializer, TODOListSerializer, TaskSerializer
-from api.mail_sender import send_confirmation_email, send_forgot_password_email
-from api.tokens import account_activation_token
+from api.services.tokens import account_activation_token
 from api.models import TODOList
 
 class TaskCreation(APIView):

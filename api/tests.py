@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from rest_framework import status
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
-from api.tokens import account_activation_token
+from api.services.tokens import account_activation_token
 from datetime import datetime
 
 class UserTest(APITestCase):
