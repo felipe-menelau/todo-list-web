@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
+from api.models import TODOList
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -22,3 +23,12 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         model = User
         fields = ('url', 'username', 'email', 'password')
 
+class TODOListSerializer(serializers.HyperlinkedModelSerializer):
+    title = serializers.CharField(min_length=1)
+
+    owner = serializers.PrimaryKeyRelatedField(queryset = User.objects.all())
+
+    class Meta:
+        model = TODOList
+        fields = ('url', 'title', 'owner')
+        depth = 1
