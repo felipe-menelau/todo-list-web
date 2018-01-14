@@ -65,3 +65,11 @@ class TaskManagement(APIView):
                 return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
         else:
             return Response('', status.HTTP_403_FORBIDDEN)
+
+    def delete(self, request, pk, pk_task, format='json'):
+        try:
+            task = Task.objects.get(owner=pk, id=pk_task)
+        except(TypeError, ValueError, OverflowError, Task.DoesNotExist):
+            return Response('', status.HTTP_403_FORBIDDEN)
+        task.delete()
+        return Response('', status.HTTP_204_NO_CONTENT)
