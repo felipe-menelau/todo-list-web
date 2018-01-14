@@ -48,8 +48,15 @@ class TaskManagement(APIView):
                 request.data['title'] = task.title
             if 'deadline' not in request.data:
                 request.data['deadline'] = task.deadline
+
             if 'assigned_to' not in request.data:
                 request.data['assigned_to'] = task.assigned_to
+            else:
+                try:
+                    request.data['assigned_to'] = User.objects.get(username=request.data['assigned_to']).id
+                except(TypeError, ValueError, OverflowError, User.DoesNotExist):
+                    return Response('invalid username', status.HTTP_400_BAD_REQUEST)
+
             serializer = TaskSerializer(task, data=request.data)
             if serializer.is_valid():
                 serializer.save()
