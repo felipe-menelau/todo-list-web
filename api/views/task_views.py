@@ -26,6 +26,14 @@ class TaskCreation(APIView):
         else:
             return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
+    def get(self, request, pk, format='json'):
+        try:
+            queryset = TODOList.objects.get(owner=request.user.id, id=pk).task_set.all()
+        except(TypeError, ValueError, OverflowError, Task.DoesNotExist):
+            return Response('', status.HTTP_400_BAD_REQUEST)
+        serializer = TaskSerializer(queryset, many=True)
+        return Response(serializer.data, status.HTTP_200_OK)
+
 class TaskManagement(APIView):
     permission_classes = [IsAuthenticated]
 
