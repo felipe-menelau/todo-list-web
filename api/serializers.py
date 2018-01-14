@@ -24,12 +24,14 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         model = User
         fields = ('url', 'username', 'email', 'password')
 
-class TaskSerializer(serializers.HyperlinkedModelSerializer):
+class TaskSerializer(serializers.ModelSerializer):
     title = serializers.CharField(min_length=1)
 
     owner = serializers.PrimaryKeyRelatedField(queryset = TODOList.objects.all())
 
     deadline = serializers.DateTimeField()
+
+    assigned_to = serializers.PrimaryKeyRelatedField(queryset = User.objects.all(), allow_null=True)
 
     def create(self, validated_data):
         task = Task.objects.create(title=validated_data['title'], deadline=validated_data['deadline'],
@@ -38,7 +40,7 @@ class TaskSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Task
-        fields = ('title', 'deadline', 'owner')
+        fields = ('id', 'title', 'deadline', 'owner', 'assigned_to')
 
 
 class TODOListSerializer(serializers.HyperlinkedModelSerializer):
