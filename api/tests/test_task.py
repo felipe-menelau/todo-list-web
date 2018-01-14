@@ -71,4 +71,16 @@ class TaskTest(APITestCase):
 
         self.test_task.refresh_from_db()
 
+        self.assertEqual(response.status_code, status.HTTP_202_ACCEPTED)
         self.assertEqual(self.test_task.done, True)
+
+    def test_delete_task(self):
+        response = self.client.delete(
+                reverse('task-detail', kwargs={'pk': self.test_todo_list.id, 'pk_task': self.test_task.id}),
+                format='json'
+            )
+
+        self.test_todo_list.refresh_from_db()
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(self.test_todo_list.task_set.count(), 0)
