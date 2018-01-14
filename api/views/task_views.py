@@ -29,7 +29,7 @@ class TaskCreation(APIView):
     def get(self, request, pk, format='json'):
         try:
             queryset = TODOList.objects.get(owner=request.user.id, id=pk).task_set.all()
-        except(TypeError, ValueError, OverflowError, Task.DoesNotExist):
+        except(TypeError, ValueError, OverflowError, TODOList.DoesNotExist):
             return Response('', status.HTTP_400_BAD_REQUEST)
         serializer = TaskSerializer(queryset, many=True)
         return Response(serializer.data, status.HTTP_200_OK)
