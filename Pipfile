@@ -16,6 +16,7 @@ djangorestframework-simplejwt = "*"
 django-extensions = "*"
 weasyprint = "*"
 gunicorn = "*"
+dj-database-url = "*"
 
 
 [requires]
