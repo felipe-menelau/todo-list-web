@@ -44,3 +44,30 @@ To run the server in development do
 ```
 python manage.py runserver 0.0.0.0:8000 
 ```
+
+## Production ##
+
+To deploy with Heroku create a new branch called production, refer to [heroku documentation](https://devcenter.heroku.com/articles/deploying-python)
+
+```
+git checkout -b production
+```
+
+Tweak the .env file and settings.py file to fit the production enviroment, then commit changes to the production branch **DO NOT PUSH THEM TO REMOTE**
+```
+git add .
+git commit -m "Production ready"
+```
+
+Push changes to your heroku app
+```
+git push heroku production:master
+```
+
+Make migrations and migrate
+```
+heroku run python manage.py makemigrations
+heroku run python manage.py migrate 
+```
+
+You're done! You can find the api at apiary
