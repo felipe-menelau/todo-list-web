@@ -37,7 +37,7 @@ class UserCreate(APIView):
 
 class UserActivate(APIView):
     def patch(self, request, format='json'):
-        uid = force_text(urlsafe_base64_decode(request.data['uid']))
+        uid = urlsafe_base64_decode(request.data['uid']).decode()
         token = request.data['token']
         try:
             user = User.objects.get(pk=uid)
