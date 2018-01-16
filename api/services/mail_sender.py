@@ -8,7 +8,7 @@ def send_confirmation_email(user):
         mail_subject = 'Activate your account.'
         message = render_to_string('acc_active_email.html', {
                 'user': user,
-                'uid':urlsafe_base64_encode(force_bytes(user.pk)),
+                'uid':user.pk,
                 'token':account_activation_token.make_token(user),
             })
         email = EmailMessage(
