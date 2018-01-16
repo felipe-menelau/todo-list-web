@@ -64,7 +64,7 @@ class UserPasswordManagement(APIView):
             return Response('', status.HTTP_204_NO_CONTENT)
 
     def patch(self, request, format='json'):
-        uid = force_text(urlsafe_base64_decode(request.data['uid']))
+        uid = request.data['uid']
         token = request.data['token']
         try:
             user = User.objects.get(pk=uid)
