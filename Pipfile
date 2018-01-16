@@ -15,6 +15,7 @@ python-dotenv = "*"
 djangorestframework-simplejwt = "*"
 django-extensions = "*"
 weasyprint = "*"
+gunicorn = "*"
 
 
 [requires]
