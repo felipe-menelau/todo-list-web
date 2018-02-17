@@ -71,3 +71,7 @@ heroku run python manage.py migrate
 ```
 
 You're done! You can find the api at apiary
+
+## LICENSE ##
+
+Todo list web runs under (MIT License)[https://opensource.org/licenses/MIT]
